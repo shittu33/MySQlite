@@ -1,7 +1,8 @@
-package com.example.mysqlite;
+package com.example.mysqlite.engine;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
@@ -23,8 +24,11 @@ import static com.example.mysqlite.Constants.AND;
 import static com.example.mysqlite.Constants.ASC;
 import static com.example.mysqlite.Constants.DEBUG_TABLES;
 import static com.example.mysqlite.Constants.DESC;
+import static com.example.mysqlite.Constants.DOUBLE;
+import static com.example.mysqlite.Constants.FLOAT;
 import static com.example.mysqlite.Constants.GREATER_EQUAL;
 import static com.example.mysqlite.Constants.INTEGER;
+import static com.example.mysqlite.Constants.LONG;
 import static com.example.mysqlite.Constants.OR;
 import static com.example.mysqlite.Constants.STRING;
 
@@ -41,35 +45,36 @@ public class Table implements Serializable {
     private SQLiteDatabase db;
     private String[] columns = new String[]{null};
 
-    public Table() {
+    protected Table() {
 
     }
 
-    public Table(String table_name) {
+    public Table(DatabaseCreator db_Creator,String table_name) {
         this.table_name = table_name;
     }
 
+    /**
+     * @param db_Creator an object of Database creator, a class that handle database
+     * creation stuffs
+     * @see
+     * "{@link com.example.mysqlite.engine.DatabaseCreator#DatabaseCreator(Context, int),
+     *   @link com.example.mysqlite.engine.DatabaseCreator#DatabaseCreator(Context,String, int),
+     *   @link com.example.mysqlite.engine.DatabaseCreator#DatabaseCreator(Context,String
+     *   ,SQLiteDatabase.CursorFactory ,int),
+     * }"
+     *
+     * @param table_name your table name
+     * @param columns used an array to collect your column name
+     * {@link #getInteger_ColumnStatement(String)#getIntegerColumn_with_Only_PrimaryKeyStatement(String)
+     * #getIntegerColumn_with_PrimaryKey_AutoIncrementStatement(String)}
+     * and other method like that to insert your columns...
+     */
     public Table(DatabaseCreator db_Creator, String table_name, String... columns) {
-//        CreateDatabase(context, "UdusHandout.Sqlite");
         db_write = db_Creator.getWritableDatabase();
         db = db_Creator.getReadableDatabase();
         this.table_name = table_name;
         create_with_ColumnList(columns);
         this.columns = columns;
-    }
-
-    public void CreateDatabase(Activity context, String Database_name) {
-//        sqlite = new SQLiteOpenHelper(context, Database_name, null, 1) {
-//            @Override
-//            public void onCreate(SQLiteDatabase db) {
-//
-//            }
-//
-//            @Override
-//            public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//
-//            }
-//        };
     }
 
     public void Create(String... columns) {
@@ -99,15 +104,14 @@ public class Table implements Serializable {
                 "("
                 + columns_Statements +
                 ")");
-//        onTableCreatedListener.onTableCreated();
     }
-//
-//    /**
-//     * @param columns used an array to collect your column name
-//     *                {@link #getInteger_ColumnStatement(String)#getIntegerColumn_with_Only_PrimaryKeyStatement(String)
-//     *                #getIntegerColumn_with_PrimaryKey_AutoIncrementStatement(String)}
-//     *                and other method like that to insert your columns...
-//     */
+
+    /**
+     * @param columns used an array to collect your column name
+     * {@link #getInteger_ColumnStatement(String)#getIntegerColumn_with_Only_PrimaryKeyStatement(String)
+     * #getIntegerColumn_with_PrimaryKey_AutoIncrementStatement(String)}
+     * and other method like that to insert your columns...
+     */
 
     public void create_with_ColumnList(String... columns) {
         StringBuilder columns_Statements = new StringBuilder();
@@ -126,19 +130,6 @@ public class Table implements Serializable {
 //                columns_Statements +
 //                ")";
 //        createTable(create_statement);
-    }
-
-
-    public void insert_Data_to(String pic1, String pic2, String pic3, String pic4, String pic5) {
-        String t_statement = "INSERT INTO " + table_name + "(NULL,?,?,?,?,?)";
-        SQLiteStatement statement = db_write.compileStatement(t_statement);
-        statement.clearBindings();
-        statement.bindString(1, pic1);
-        statement.bindString(2, pic2);
-        statement.bindString(3, pic3);
-        statement.bindString(4, pic4);
-        statement.bindString(5, pic5);
-        statement.executeInsert();
     }
 
     /**
@@ -289,7 +280,6 @@ public class Table implements Serializable {
         return fetchData_With_Statment(statement);
     }
 
-
     public Cursor fetch_All_Where(String where) {
         return fetchData_With_Statment("SELECT * FROM " + table_name + " WHERE " + where);
     }
@@ -366,11 +356,12 @@ public class Table implements Serializable {
     }
 
     private Cursor getIfExistStringRecordInColumnCursor(String column, String search_item, String where) {
-        return db.rawQuery("SELECT EXISTS (SELECT * FROM " + table_name + " WHERE " + where + " AND "  + column + " ='" + search_item + "' LIMIT 1)", null);
+        return db.rawQuery("SELECT EXISTS (SELECT * FROM " + table_name + " WHERE " + where + " AND " + column + " ='" + search_item + "' LIMIT 1)", null);
     }
+
     private Cursor getIfExistIntegerRecordInColumnCursor(String column, int search_item, String where) {
 //        return db.rawQuery("SELECT * FROM " + table_name + " WHERE    yourKey=? AND yourKey1=?", new String[]{keyValue,keyvalue1});
-        return db.rawQuery("SELECT EXISTS (SELECT * FROM " + table_name + " WHERE " + where + " AND "  + column + " =" + search_item + " LIMIT 1)", null);
+        return db.rawQuery("SELECT EXISTS (SELECT * FROM " + table_name + " WHERE " + where + " AND " + column + " =" + search_item + " LIMIT 1)", null);
     }
 
     private Cursor getIfExistStringRecordInColumnCursor(String column, String search_item) {
@@ -382,10 +373,11 @@ public class Table implements Serializable {
         return db.rawQuery("SELECT EXISTS (SELECT * FROM " + table_name + " WHERE " + column + "=" + search_item + " LIMIT 1)", null);
     }
 
-    /** Covinient method to check if a column contain a value
+    /**
+     * Covinient method to check if a column contain a value
      *
-     * @param column The column to search through
-     * @param value the search item either String or integer
+     * @param column                 The column to search through
+     * @param value                  the search item either String or integer
      * @param other_where_statements other where statement to filter the result
      * @return return true if the item was found, false otherwise.
      */
@@ -394,7 +386,7 @@ public class Table implements Serializable {
             Cursor cursor = getIfExistStringRecordInColumnCursor(column, (String) value, other_where_statements);
             cursor.moveToFirst();
             return cursor.getInt(0) == 1;
-        }else if (value instanceof Integer){
+        } else if (value instanceof Integer) {
             Cursor cursor = getIfExistIntegerRecordInColumnCursor(column, (Integer) value, other_where_statements);
             cursor.moveToFirst();
             return cursor.getInt(0) == 1;
@@ -402,10 +394,11 @@ public class Table implements Serializable {
         return false;
     }
 
-    /** Covinient method to check if a column contain a value
+    /**
+     * Covinient method to check if a column contain a value
      *
      * @param column The column to search through
-     * @param value the search item either String or integer
+     * @param value  the search item either String or integer
      * @return return true if the item was found, false otherwise.
      */
     public boolean is_valueExistInColumn(String column, Object value) {
@@ -413,7 +406,7 @@ public class Table implements Serializable {
             Cursor cursor = getIfExistStringRecordInColumnCursor(column, (String) value);
             cursor.moveToFirst();
             return cursor.getInt(0) == 1;
-        }else if (value instanceof Integer){
+        } else if (value instanceof Integer) {
             Cursor cursor = getIfExistIntegerRecordInColumnCursor(column, (Integer) value);
             cursor.moveToFirst();
             return cursor.getInt(0) == 1;
@@ -423,7 +416,8 @@ public class Table implements Serializable {
 
     /**
      * A convinient method to update each row in a column by adding some value
-     * @param Column column to update
+     *
+     * @param Column         column to update
      * @param incrementValue a number to add
      */
     public void IncreaseIntegerColumnValues(String Column, int incrementValue) {
@@ -433,9 +427,10 @@ public class Table implements Serializable {
     /**
      * A convinient method to update each row in a column by adding some value
      * with WHERE statement
-     * @param Column column to update
+     *
+     * @param Column         column to update
      * @param incrementValue a number to add
-     * @param where a where statement used as filter of records excluding WHERE keyword
+     * @param where          a where statement used as filter of records excluding WHERE keyword
      */
     public void IncreaseIntegerColumnValues(String Column, int incrementValue, String where) {
         db.execSQL("UPDATE " + table_name + " SET " + Column + "=" + Column + " + " + incrementValue + " WHERE " + where);
@@ -484,6 +479,7 @@ public class Table implements Serializable {
         update_Column_Where(Column, new_value, whereStatement);
 
     }
+
     /**
      * @param Column    column to update
      * @param new_value the new value to replace the old one
@@ -545,12 +541,54 @@ public class Table implements Serializable {
     }
 
     /**
+     * Loop through the whole table row by row
+     *
+     * @param loop_rows_listener the listener to listen to cursor progress
+     */
+    public void loop_all_table_rows(LoopRowsListener loop_rows_listener) {
+        Cursor cursor = fetchAll();
+        while (cursor.moveToNext()) {
+            String type = null;
+            String[] columns= cursor.getColumnNames();
+            ContentValues values = new ContentValues();
+            for (int curent_index = 0;
+                 curent_index < columns.length
+                    ; curent_index++) {
+                final String column = columns[curent_index];
+                Log.e(TAG, "loop_all_table_rows: "+ column);
+                type = getColumnTypeByPosition(curent_index);
+                switch (type) {
+                    case STRING:
+                        values.put(column, cursor.getString(curent_index));
+                        break;
+                    case INTEGER:
+                        final int value = cursor.getInt(curent_index);
+                        Log.e(TAG, "loop_all_table_rows: "+ value);
+                        values.put(column, value);
+                        break;
+                    case FLOAT:
+                        values.put(column, cursor.getFloat(curent_index));
+                        break;
+                    case DOUBLE:
+                        values.put(column, cursor.getLong(curent_index));
+                        break;
+                    case LONG:
+                        values.put(column, cursor.getDouble(curent_index));
+                        break;
+                }
+            }
+            loop_rows_listener.onDataAddedProgress(values);
+        }
+    }
+
+
+    /**
      * convenient method to loop through all the columns in a table
      *
      * @return this method will return an #ArrayList containing n number of arraylist, and 'n'
      * is the number of columns you passed to the method
      * but mind you the compiler will issue some Unchecked Error, but you will be okay if you use the appropriate List_type to store accept the values.
-//     * @see #loop_column_of_any_type(String column) for more details...
+     * //     * @see #loop_column_of_any_type(String column) for more details...
      * You can easily retrieved your data using this method like below:
      * <>code
      * <p>
@@ -617,52 +655,54 @@ public class Table implements Serializable {
 
     }
 
-    public void loop_column_WithListener(String column,Class class_type,OnColumnMoveToNext onColumnMoveToNext){
+    public void loop_column_WithListener(String column, Class class_type, OnColumnMoveToNext onColumnMoveToNext) {
         Cursor cursor = fetch_Column(column);
         while (cursor.moveToNext()) {
             int columnIndex = cursor.getColumnIndex(column);
-            if (class_type.equals(String.class)){
-                onColumnMoveToNext.onMoveToNext(cursor.getString(columnIndex),class_type);
-            }else if (class_type.equals(Integer.class)){
-                onColumnMoveToNext.onMoveToNext(cursor.getInt(columnIndex),class_type);
-            }else if (class_type.equals(Float.class)){
-                onColumnMoveToNext.onMoveToNext(cursor.getFloat(columnIndex),class_type);
-            }else if (class_type.equals(Blob.class)){
-                onColumnMoveToNext.onMoveToNext(cursor.getBlob(columnIndex),class_type);
-            }else if (class_type.equals(Long.class)){
-                onColumnMoveToNext.onMoveToNext(cursor.getLong(columnIndex),class_type);
-            }else if (class_type.equals(Double.class)){
-                onColumnMoveToNext.onMoveToNext(cursor.getDouble(columnIndex),class_type);
+            if (class_type.equals(String.class)) {
+                onColumnMoveToNext.onMoveToNext(cursor.getString(columnIndex), class_type);
+            } else if (class_type.equals(Integer.class)) {
+                onColumnMoveToNext.onMoveToNext(cursor.getInt(columnIndex), class_type);
+            } else if (class_type.equals(Float.class)) {
+                onColumnMoveToNext.onMoveToNext(cursor.getFloat(columnIndex), class_type);
+            } else if (class_type.equals(Blob.class)) {
+                onColumnMoveToNext.onMoveToNext(cursor.getBlob(columnIndex), class_type);
+            } else if (class_type.equals(Long.class)) {
+                onColumnMoveToNext.onMoveToNext(cursor.getLong(columnIndex), class_type);
+            } else if (class_type.equals(Double.class)) {
+                onColumnMoveToNext.onMoveToNext(cursor.getDouble(columnIndex), class_type);
             }
 
         }
         cursor.close();//smtn might go wrong
     }
-    public void loop_column_WithListener(String column,Class class_type,String where_statement,OnColumnMoveToNext onColumnMoveToNext){
-        Cursor cursor = fetch_Column_Where(column,where_statement);
+
+    public void loop_column_WithListener(String column, Class class_type, String where_statement, OnColumnMoveToNext onColumnMoveToNext) {
+        Cursor cursor = fetch_Column_Where(column, where_statement);
         while (cursor.moveToNext()) {
             int columnIndex = cursor.getColumnIndex(column);
-            if (class_type.equals(String.class)){
-                onColumnMoveToNext.onMoveToNext(cursor.getString(columnIndex),class_type);
-            }else if (class_type.equals(Integer.class)){
-                onColumnMoveToNext.onMoveToNext(cursor.getInt(columnIndex),class_type);
-            }else if (class_type.equals(Float.class)){
-                onColumnMoveToNext.onMoveToNext(cursor.getFloat(columnIndex),class_type);
-            }else if (class_type.equals(Blob.class)){
-                onColumnMoveToNext.onMoveToNext(cursor.getBlob(columnIndex),class_type);
-            }else if (class_type.equals(Long.class)){
-                onColumnMoveToNext.onMoveToNext(cursor.getLong(columnIndex),class_type);
-            }else if (class_type.equals(Double.class)){
-                onColumnMoveToNext.onMoveToNext(cursor.getDouble(columnIndex),class_type);
+            if (class_type.equals(String.class)) {
+                onColumnMoveToNext.onMoveToNext(cursor.getString(columnIndex), class_type);
+            } else if (class_type.equals(Integer.class)) {
+                onColumnMoveToNext.onMoveToNext(cursor.getInt(columnIndex), class_type);
+            } else if (class_type.equals(Float.class)) {
+                onColumnMoveToNext.onMoveToNext(cursor.getFloat(columnIndex), class_type);
+            } else if (class_type.equals(Blob.class)) {
+                onColumnMoveToNext.onMoveToNext(cursor.getBlob(columnIndex), class_type);
+            } else if (class_type.equals(Long.class)) {
+                onColumnMoveToNext.onMoveToNext(cursor.getLong(columnIndex), class_type);
+            } else if (class_type.equals(Double.class)) {
+                onColumnMoveToNext.onMoveToNext(cursor.getDouble(columnIndex), class_type);
             }
 
         }
         cursor.close();//smtn might go wrong
     }
 
-    public interface OnColumnMoveToNext{
+    public interface OnColumnMoveToNext {
         void onMoveToNext(Object row_data, Class class_type);
     }
+
     /**
      * This is a convenient method for looping through a column
      *
@@ -681,7 +721,7 @@ public class Table implements Serializable {
     public ArrayList loop_column_of_any_type(String column, String where) {
         Cursor cursor = fetch_Column_Where(column, where);
         String type = getColumnTypeByName(column);
-        Class<String> s= String.class;
+        Class<String> s = String.class;
 //        Object j= "";
 //        j.getClass();
         ArrayList<Integer> tmpListInteger = new ArrayList<>();
@@ -704,14 +744,16 @@ public class Table implements Serializable {
         }
 
     }
-    /** this is for looping any type of column on your table plus listening to the progress
+
+    /**
+     * this is for looping any type of column on your table plus listening to the progress
      * its strictly advisable that you run this on a separate thread
-     * @param column : this is the column you want to fetch
-     * @param where : this is the where statement to filter your result
-     * @param loop_column_listener : this is the listener that listen to the looping progress
      *
-     * */
-    public void loop_column_with_listener(String column, String where,Loop_column_listener loop_column_listener) {
+     * @param column               : this is the column you want to fetch
+     * @param where                : this is the where statement to filter your result
+     * @param loop_column_listener : this is the listener that listen to the looping progress
+     */
+    public void loop_column_with_listener(String column, String where, Loop_column_listener loop_column_listener) {
         Cursor cursor = fetch_Column_Where(column, where);
         String column_type = getColumnTypeByName(column);
         cursor.moveToFirst();
@@ -723,9 +765,11 @@ public class Table implements Serializable {
         cursor.close();
 
     }
-public interface Loop_column_listener{
-        void onDataAddedProgress(Cursor cursor, int columnIndex, String column_type);
-}
+
+    public interface Loop_column_listener {
+        void onDataAddedProgress(Cursor cursor, int column_index, String column_type);
+    }
+
     /**
      * This is a convenient method for looping through a column
      *
@@ -781,8 +825,8 @@ public interface Loop_column_listener{
      * This is a convenient method for looping through a column
      *
      * @param column_position the position(0...n-1) of the column as you listed them while creating your table...
-//     * @return return {@link ArrayList} that contains the list of values of String type in a column.
-     * loop_String_Column(String column)
+     *                        //     * @return return {@link ArrayList} that contains the list of values of String type in a column.
+     *                        loop_String_Column(String column)
      */
     public ArrayList<String> loop_String_Column(int column_position) {
         String column_name = getColumnNameByPosition(column_position);
@@ -894,10 +938,30 @@ public interface Loop_column_listener{
         for (String column : columns) {
             list_of_columns.add(loop_column_of_any_type(column));
         }
-//        }
         return list_of_columns;
     }
 
+    public int getColumnIndex(String column_name) {
+        for (int i = 0; i < columns.length; i++) {
+            if (column_name.equals(columns[i])) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    public interface LoopRowsListener {
+        /**
+         * @param row_values this content value will hold all
+         *                   values of individual row
+         *                   for example if you have column id,name and age
+         *                   each time this method is called it will return something
+         *                   like this (id=0,name=john,age=12)
+         *                   the method will be called until the cursor reach the last
+         *                   row
+         */
+        void onDataAddedProgress(ContentValues row_values);
+    }
 
     /**
      * convenient method to loop group of columns
@@ -1368,6 +1432,7 @@ public interface Loop_column_listener{
     public String get_Greater_Equal_Statement(String column, int value) {
         return get_a_Statement_with_Operator(column, GREATER_EQUAL, value);
     }
+
     public String get_Greater_Equal_Statement(Where where) {
         return get_a_Statement_with_Operator(where.getColumn(), GREATER_EQUAL, where.getValue());
     }
@@ -1450,9 +1515,14 @@ public interface Loop_column_listener{
             String content = columns[column_position];
             String sql_type = get_a_word(content, " ", 1);
             switch (sql_type) {
+                case "DECIMAL":
+                case "FLOAT":
+                    column_Type = FLOAT;
+                    break;
                 case "INTEGER":
                     column_Type = INTEGER;
                     break;
+                case "TEXT":
                 case "VARCHAR":
                     column_Type = STRING;
                     break;
