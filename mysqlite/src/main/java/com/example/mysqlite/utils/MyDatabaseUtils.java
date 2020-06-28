@@ -4,7 +4,7 @@ import android.os.Environment;
 
 import java.io.File;
 
-public class DatabaseUtils {
+public class MyDatabaseUtils {
     /**
      * @param app_dir your app filename, if you have none just put any name you like
      * @param database_name the name of the database

@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.os.AsyncTask
 import android.util.Log
+import com.example.mysqlite.engine.Columns
 import com.example.mysqlite.engine.DatabaseCreator
 import com.example.mysqlite.engine.Table
+import com.example.mysqlite.engine.getValueOf
 
 /**
  * A class that extends table class, you can also create any
@@ -14,69 +16,45 @@ import com.example.mysqlite.engine.Table
  * @see * @see "{@link com.example.mysqlite.engine.Table}table class.
  */
 class NoteTable(database: DatabaseCreator?) : Table(
-    database,
+    database!!,
     NOTE_TABLE,
-    getIntegerColumn_with_PrimaryKey_AutoIncrementStatement(ID),
-    getString_ColumnStatement(COLUMN_DETAILS),
-    getString_ColumnStatement(COLUMN_AUTHOR)
+    Columns.primaryAutoIncrementColumn<Int>(ID),
+    Columns.column<String>(COLUMN_DETAILS),
+    Columns.column<String>(COLUMN_AUTHOR)
 ) {
-    private val idIndex = 0
-    private val detailsIndex = 1
-    private val authorIndex = 2
-
+    /**let Loaf the data on background thread using AsyncTask*/
     @SuppressLint("StaticFieldLeak")
     fun loadAllNotes(noteListener: LoadNoteListener) {
         object : AsyncTask<Void?, Void?, List<Note>>() {
             protected override fun doInBackground(vararg params: Void?): List<Note> {
                 val notes = arrayListOf<Note>()
-                loop_all_table_rows { row_values ->
-                    if (row_values == null) {
-                        Log.e(TAG,"onDataAddedProgress: " + "Why is row_values null?"
-                        )
-                    } else {
-                        val id = row_values.getAsInteger(ID)
-                        Log.e(TAG,"onDataAddedProgress: " + "isn't null"
-                        )
-                        val note =getNoteFromRowValues(row_values)
-                        Log.e(TAG,"onNoteLoadProgress: $note"
-                        )
-                        //Log.e(TAG, "onDataAddedProgress: " + id);
-                        noteListener.onNoteLoadProgress(note, id)
-                        notes.add(note)
-                    }
+                getRows {
+                    val id = getValueOf<Int>(ID)
+                    // you can also use extention function to get the note
+                    // directly like [getNoteFromRowValues()]
+                    val note = getNoteFromRowValues()
+                    noteListener.onNoteLoadProgress(note, id)
+                    notes.add(note)
                 }
                 return notes
             }
-
             override fun onPostExecute(notes: List<Note>) {
                 super.onPostExecute(notes)
                 noteListener.onNoteLoaded(notes)
+                Log.e(TAG, "onPostExecute")
             }
         }.execute()
     }
 
-
-    private fun getNoteFromRowValues(row_values: ContentValues): Note {
-        val id = row_values.getAsInteger(ID)
-        val details = row_values.getAsString(COLUMN_DETAILS)
-        val author = row_values.getAsString(COLUMN_AUTHOR)
-        Log.e(
-            TAG, "getNoteFromRowValues: ID= " + id
-                    + ", details= " + details
-                    + ", author= " + author
-        )
-        return Note(id, details, author)
-    }
-
-    private fun getRowValuesFromNote(note: Note): ContentValues {
+    private fun Note.getRowValuesFromNote(): ContentValues {
         val row_values = ContentValues()
-        row_values.put(COLUMN_DETAILS, note.details)
-        row_values.put(COLUMN_AUTHOR, note.author)
+        row_values.put(COLUMN_DETAILS, details)
+        row_values.put(COLUMN_AUTHOR, author)
         return row_values
     }
 
     fun insertNote(note: Note) {
-        insert_values_to_columns(getRowValuesFromNote(note))
+        insert(note.getRowValuesFromNote())
     }
 
     interface LoadNoteListener {
@@ -89,6 +67,22 @@ class NoteTable(database: DatabaseCreator?) : Table(
         const val ID = "id"
         const val COLUMN_DETAILS = "details"
         const val COLUMN_AUTHOR = "author"
-        private const val TAG = "NoteTable"
+        const val TAG = "NoteTable"
     }
+}
+
+/**
+ * Instead of getting values one by one everytime to populate NoteTable
+ * just create an extention function to do that for Example inside then
+ * loopAllTableRows function just call the method like this
+ * [val note:Note = getNoteFromRowValues()]
+ * and you are done!
+ *
+ * */
+fun ContentValues.getNoteFromRowValues(): Note {
+    val id = getValueOf<Int>(NoteTable.ID)
+    val details = getValueOf<String>(NoteTable.COLUMN_DETAILS)
+    val author = getValueOf<String>(NoteTable.COLUMN_AUTHOR)
+    Log.e(NoteTable.TAG, "getNoteFromRowValues: ID= $id, details= $details, author= $author")
+    return Note(id, details, author)
 }

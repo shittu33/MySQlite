@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">MySQLite Sample</string>
     <string name="add">add</string>
+    <string name="author">Author</string>
 </resources>
