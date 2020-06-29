@@ -45,6 +45,13 @@ class NoteAdapter() : ListAdapter<Note, NoteHolder>(DIFF_CALLBACK) {
                     mItemListener!!.onClick(v, getNote(currentPos), currentPos)
                 }
             }
+            itemView.setOnLongClickListener { v ->
+                val currentPos = adapterPosition
+                if (mItemListener != null) {
+                    mItemListener!!.onLongClick(v, getNote(currentPos), currentPos)
+                }
+                 true
+            }
         }
 
         fun populateData(note: Note?) {
@@ -62,6 +69,7 @@ class NoteAdapter() : ListAdapter<Note, NoteHolder>(DIFF_CALLBACK) {
 
     interface ItemListener {
         fun onClick(v: View?, Note: Note?, pos: Int)
+        fun onLongClick(v: View?, Note: Note?, pos: Int)
     }
 
     companion object {

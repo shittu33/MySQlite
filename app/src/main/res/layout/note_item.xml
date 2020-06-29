@@ -13,25 +13,27 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/tv_details"
+            tools:text="some text will go here..."
+            android:lines="1"
+            android:ellipsize="end"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:layout_height="wrap_content" />
+
+        <TextView
             android:id="@+id/tv_author"
             tools:text="Author"
+            android:layout_below="@+id/tv_details"
             android:layout_alignParentStart="true"
             android:layout_toStartOf="@+id/tv_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_toLeftOf="@+id/tv_id"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
-
-        <TextView
-            android:id="@+id/tv_details"
-            tools:text="some text will go here..."
-            android:layout_below="@+id/tv_author"
-            android:lines="1"
-            android:ellipsize="end"
-            android:textSize="18sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textStyle="bold"
+            />
 
         <TextView
             android:id="@+id/tv_id"

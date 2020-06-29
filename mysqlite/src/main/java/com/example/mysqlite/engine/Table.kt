@@ -144,7 +144,7 @@ open class Table : Serializable {
     }
 
     /**
-     * @param values contain columns as a key and column values as value
+     * @param values contain columns as a key and column values as value of ContentValues
      */
     fun insert(values: ContentValues?) {
         dbWrite!!.insert(tableName, null, values)
@@ -181,9 +181,8 @@ open class Table : Serializable {
     /**
      * @param contentValues a map from column names to new column values. null is a
      * valid value that will be translated to NULL.
-     * @param condition  the optional WHERE clause to apply when updating.
-     * will be replaced by the values from whereArgs. The values
-     * will be bound as Strings.
+     * @param condition  the optional condition clause to apply when updating.
+     * [e.g condition= ID exceeds 3 and COLUMN_DETAILS isEqual "okay"]
      */
     private fun update(
         contentValues: ContentValues,
@@ -194,18 +193,17 @@ open class Table : Serializable {
 
     /**
      * Convinient function to insert value to columns
-     *  as in insert(5 to "id","dd" to "details","me" to "author" )
+     *  as in update("column_name" with  new_name ,"column_age" with 23... )
      * @param condition the WHERE clause to apply when updating,
      *        take note that you have to explicitly specify the condition
-     *        like this update(5 to "id",6 to "id", condition= "author_column" Is "john")
+     * [e.g condition= ID exceeds 3 and COLUMN_DETAILS isEqual "okay"]
      * @param columnValuePair is a pair of values to column of type [Pair(value,column)]
-     * Note: this function does not allow updating 2 differnt value to the same column
-     * [e.g 5 to "id",6 to "id"]
+     * [e.g "column_name" with  new_name ,"column_age" with 23]
      * >
      */
     fun update(vararg columnValuePair: ColumnValuePair<String, Any>, condition: String) {
         val contentValues = ContentValues()
-        for ((i, pair) in columnValuePair.withIndex()) {
+        for (pair in columnValuePair) {
             contentValues.checkAndSaveValues(pair.value, pair.column)
         }
         update(contentValues, condition)
@@ -213,11 +211,10 @@ open class Table : Serializable {
     }
 
     /**
-     * Convenient function to insert value to columns
-     *  as in insert(5 to "id","dd" to "details","me" to "author" )
+     * Convenient function to update all rows with specified value for each column
+     *  as in update("column_name" with  new_name ,"column_age" with 23... )
      * @param columnValuePair is a pair of values to column of type [Pair(value,column)]
-     * Note: this function does not allow updating 2 differnt value to the same column
-     * [e.g 5 to "id",6 to "id"]
+     * [e.g "column_name" with  new_name ,"column_age" with 23]
      * >
      */
     fun update(vararg columnValuePair: ColumnValuePair<String, Any>) {
@@ -230,7 +227,7 @@ open class Table : Serializable {
 
     /**
      * Convinient function to update value of columns
-     *  as in update(5,"column_name" to  new_name ,"column_age" to 23... )
+     *  as in updateRow(5,"column_name" with  new_name ,"column_age" with 23... )
      *  @param keyValue the unique primary key that identify each row
      * @param ColumnValuePair is a pair of values to column of type [Pair(column,value)]
      * >
@@ -242,11 +239,12 @@ open class Table : Serializable {
 
     /**
      * Convinient function to update value of columns
-     *  as in updateRow(5,"column_name" to  new_name ,"column_age" to 23... )
+     *  as in updateRow(5,"column_name" with  new_name ,"column_age" with 23...
+     *  , condition= "column_name" Is "john")
      *  @param keyValue the unique primary key that identify each row
      *  @param condition the condition to filter the sendResult
      *        take note that you have to explicitly specify the condition
-     *        like this getSpecificRows(2, 3,4, condition= "author_column" Is "john")
+     *        like this updateRow(condition= "column_name" Is "john")
      * @param ColumnValuePair is a pair of values to column of type [Pair(column,value)]
      * >
      */
