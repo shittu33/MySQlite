@@ -128,13 +128,13 @@ create a database in a tree like structure as below
         noteTable =
         table {
         tableName = "Note"
-        columns {
-           autoPrimaryColumn<Int> { NoteTable.ID }
-           column<String> { COLUMN_DETAILS }
-           column<String> { COLUMN_AUTHOR }
-//         Columns.customColumn("age INTEGER PRIMARY KEY AUTOINCREMENT")
-//         customColumn { "age".integer().primaryKey().autoIncrement()}
-//         primaryColumn<Int> { ID }
+           columns {
+              autoPrimaryColumn<Int> { NoteTable.ID }
+              column<String> { COLUMN_DETAILS }
+              column<String> { COLUMN_AUTHOR }
+//            Columns.customColumn("age INTEGER PRIMARY KEY AUTOINCREMENT")
+//            customColumn { "age".integer().primaryKey().autoIncrement()}
+//            primaryColumn<Int> { ID }
                 }
             }
 //            table{...}
@@ -244,23 +244,24 @@ myDb.setDatabaseListener(object : DatabaseCreator.DatabaseListener {
 The following Kotlin features add sugar to the tea, they are the magic wands
 of this big show!!!
 
-### 1. Generic functions
-### 2. lamda function
-### 3. Type function
-### 4. Extension function
-### 5. Higher-Order Functions and Lambdas
-### 6. Scoping
-### 7. Infix notations
+#### 1. Generic functions
+#### 2. lamda function
+#### 3. Type function
+#### 4. Extension function
+#### 5. Higher-Order Functions and Lambdas
+#### 6. Scoping
+#### 7. Infix notations
 
 ## Who can use this?
 
 #### 1. Anybody who wish to create a quick and simple database without diving in to the details
 #### 2. If you are unfamiliar with the usage of the above kotlin concepts
 #### 3. If you lack the moltivation to learn Kotlin
+#### 4. If you want to learn Kotlin advance features for Android 
 
 ## MySqlite Story
 
-##### 5 year ago i created some helper methods in Java to ease my usage of sqlite database, i wrote so many line of boiler plate codes, now with the advent of Kotlin and it great features, i could easily create a flexible code and i think creating this will create a lot of moltivations for developers to learn about this cool features.
+ 5 year ago i created some helper methods in Java to ease my usage of sqlite database, i wrote so many line of boiler plate codes, now with the advent of Kotlin and it great features, i could easily create a flexible code and i think creating this will create a lot of moltivations for developers to learn about this cool features.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
