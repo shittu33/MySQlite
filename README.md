@@ -13,7 +13,7 @@ MySqlite is a simple Android library that help you write a readable code for Sql
 	}
 
 	dependencies {
-	        implementation 'com.github.shittu33:MySQlite:Tag'
+	        implementation 'com.github.shittu33:MySQlite:v1.0'
 	}
 
 
