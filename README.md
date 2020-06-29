@@ -16,9 +16,10 @@ MySqlite is a simple Android library that help you write a readable code for Sql
 	        implementation 'com.github.shittu33:MySQlite:v1.0'
 	}
 
+
 ## Usage
 
-### To create your database, simply write this one line of code
+#### To create your database, simply write this one line of code
 
 ```kotlin
 
@@ -28,5 +29,16 @@ MySqlite is a simple Android library that help you write a readable code for Sql
 #### To create a Table (named Note), write this simple and readable code
 ```Kotlin
     noteTable:Table =
-     myDb createTable { "Note" autoPrimaryColumn NoteTable.ID stringColumn COLUMN_DETAILS stringColumn COLUMN_AUTHOR }
+     myDb createTable { "Note" autoPrimaryColumn ID stringColumn COLUMN_DETAILS stringColumn COLUMN_AUTHOR }
+```
+#### To populate your list from database
+
+```Kotlin
+getRows {
+     val id = getValueOf<Int>(NoteTable.ID)
+     val details = getValueOf<String>(COLUMN_DETAILS)
+     val author = getValueOf<String>(COLUMN_AUTHOR)
+     val note = Note(id, author, details)
+     notes.add(note)
+}
 ```
