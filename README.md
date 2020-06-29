@@ -1,6 +1,3 @@
-# MySQlite
-<p>
-<h1>Summary<h1/>
-<p/>
-This is a portable Sqlite Library i designed for education purpose, it will be useful for beginners who are looking forward to learn Sqlite.
+# MYSQLITE
 
+MySqlite is a simple Android library that help you write a readable code for Sqlite CRUD Operations (Create,Read,update,delete).it's designed for education purpose, it will be useful for anybody who are looking for moltivation to learn Kotlin.
