@@ -1,9 +1,4 @@
-# MYSQLITE
-
-MySqlite is a simple Android library that help you write a readable code for Sqlite CRUD Operations (Create,Read,update,delete).it's designed for education purpose, it will be useful for anybody who are looking for moltivation to learn Kotlin.
-
-## Installation
-[![](https://jitpack.io/v/shittu33/MySQlite.svg)](https://jitpack.io/#shittu33/MySQlite)
+(https://jitpack.io/v/shittu33/MySQlite.svg)](https://jitpack.io/#shittu33/MySQlite)
 
 	allprojects {
 		repositories {
@@ -31,14 +26,15 @@ MySqlite is a simple Android library that help you write a readable code for Sql
     noteTable:Table =
      myDb createTable { "Note" autoPrimaryColumn ID stringColumn COLUMN_DETAILS stringColumn COLUMN_AUTHOR }
 ```
-#### To populate your list from database
+#### To populate your list from the database, use the table object to call getRows Method
 
 ```Kotlin
-getRows {
-     val id = getValueOf<Int>(NoteTable.ID)
+noteTable.getRows {
+     val id = getValueOf<Int>(ID)
      val details = getValueOf<String>(COLUMN_DETAILS)
      val author = getValueOf<String>(COLUMN_AUTHOR)
      val note = Note(id, author, details)
      notes.add(note)
 }
 ```
+And boom! you successfully create and read from your database.
