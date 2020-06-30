@@ -21,20 +21,20 @@ MySqlite is a simple Android library that help you write a readable, yet type-sa
 
 ## Usage
 
-#### To create your database, simply write this one line of code
+#### Create Database
 
 ```kotlin
 
   val myDb = createDatabase { name = "example.db"; version = 1 }
 ```
 
-#### To create a Table (named Note), write this simple and readable code
+#### Create Table
 ```Kotlin
     noteTable:Table =
      myDb createTable { "Note" autoPrimaryColumn ID stringColumn COLUMN_DETAILS stringColumn COLUMN_AUTHOR }
 ```
 
-### To insert Data to database:
+#### Insert Data
 
 ``` Kotlin
  noteTable!!.insert(
@@ -44,7 +44,7 @@ MySqlite is a simple Android library that help you write a readable, yet type-sa
      
 ```
 
-#### To populate your note list from the database, use the table object to call getRows function
+#### Query all rows
 
 ```Kotlin
 noteTable.getRows {
@@ -56,7 +56,7 @@ noteTable.getRows {
 }
 ```
 
-#### To update a row the noteTable try one of the amazing functions
+#### Update a row
 
 ```Kotlin
  noteTable!!.updateRow(
@@ -66,7 +66,7 @@ noteTable.getRows {
 )
 
 ```
-#### To delete a row with some condition from the database
+#### Delete a row
 
 ```Kotlin
     noteTable!!.deleteRow(Note!!.id, condition = COLUMN_AUTHOR Is "john")
@@ -74,18 +74,18 @@ noteTable.getRows {
 
 And boom! you successfully created, insert,read,update and delete from your database.There are still handful of other functions to perform this operations
 
-#### Example of Other handy Functions
+## Other handy Functions
 
 ### Query functions
-#### Get row 2 with no condition:
+##### Get row 2 with no condition:
 ```Kotlin
 getRow(2) {...}
 ```
-#### Get row 3 from column details:
+##### Get row 3 from column details:
 ```Kotlin
 val details = getRow<String>(3 from COLUMN_DETAILS)
 ``` 
-#### Get a specific rows 2,3,4, and 18 with a condition:
+##### Get a specific rows 2,3,4, and 18 with a condition:
 ```Kotlin
 getSpecificRows(
   2, 3, 4, 18
@@ -93,7 +93,7 @@ getSpecificRows(
   ) {...}
 ```
 
-#### Get 4 rows from column ID, and author only, if id is less than 13 and author is john.
+##### Get 4 rows from column ID, and author only, if id is less than 13 and author is john.
 ```Kotlin
  getRowsOfColumn(
        ID
@@ -110,7 +110,7 @@ getSpecificRows(
       ,condition= ID Is 1 or ID Is 6 and COLUMN_AUTHOR Is "john"
   )
 ```
-### Deletion functions
+#### Deletion functions
 
 ```Kotlin
 deleteRows(1, 3, 4, condition= COLUMN_DETAILS Is "okay")
