@@ -71,7 +71,6 @@ noteTable.getRows {
     noteTable!!.deleteRow(Note!!.id, condition = COLUMN_AUTHOR Is "john")
 ```
 
-###
 And boom! you successfully created, insert,read,update and delete from your database.There are still handful of other functions to perform this operations
 
 #### Example of Other handy Functions
@@ -118,8 +117,8 @@ deleteWhen(ID isEqual 9 and COLUMN_AUTHOR Is "shittu")
 ```
 ## ADVANCE
 
-#### To go more crazy i had to play around with Kotlin Higher-order functions and inifx to
-create a database in a tree like structure as below
+#### To go more crazy i had to play around with Kotlin Higher-order functions 
+#### and inifx to create a database & Table in a tree like structure as below
 
 ```Kotlin
      database {
@@ -127,7 +126,7 @@ create a database in a tree like structure as below
         db_name = "example.db"
         noteTable =
         table {
-        tableName = "Note"
+           tableName = "Note"
            columns {
               autoPrimaryColumn<Int> { NoteTable.ID }
               column<String> { COLUMN_DETAILS }
@@ -142,8 +141,8 @@ create a database in a tree like structure as below
     }
 ```
 
-#### To customize your own table you might have to extend from Table Class, and with extention
-funtion, may be you don't!
+#### To customize your own table you might have to extend from Table Class
+#### ,and with extention enough extention funtion, may be you don't!
 
 ```Kotlin
 cass NoteTable(database: DatabaseCreator?) : Table(
@@ -241,23 +240,27 @@ myDb.setDatabaseListener(object : DatabaseCreator.DatabaseListener {
     I have created a sample project, check it out it should get you started
 
 ## How it works?
-The following Kotlin features add sugar to the tea, they are the magic wands
+The following Kotlin concepts add sugar to the tea, they are the magic wands
 of this big show!!!
 
 #### 1. Generic functions
-#### 2. lamda function
+#### 2. lamda & Receivers
 #### 3. Type function
 #### 4. Extension function
-#### 5. Higher-Order Functions and Lambdas
+#### 5. Higher-Order Functions
 #### 6. Scoping
 #### 7. Infix notations
+#### 8. Inline && Refied type parameters
+#### 9. Named && Default Arguments
+#### 10.Type-Safe Builders
+
+
 
 ## Who can use this?
 
 #### 1. Anybody who wish to create a quick and simple database without diving in to the details
-#### 2. If you are unfamiliar with the usage of the above kotlin concepts
-#### 3. If you lack the moltivation to learn Kotlin
-#### 4. If you want to learn Kotlin advance features for Android 
+#### 2. If you are unfamiliar with the usage of the above kotlin concepts and willing to learn
+#### 3. If you lack the moltivation to learn Kotlin advance features for Android 
 
 ## MySqlite Story
 
