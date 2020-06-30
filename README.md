@@ -47,6 +47,7 @@ MySqlite is a simple Android library that help you write a readable, yet type-sa
 #### Query all rows
 
 ```Kotlin
+val notes:ArrayList<Note>...
 noteTable.getRows {
      val id = getValueOf<Int>(ID)
      val details = getValueOf<String>(COLUMN_DETAILS)
