@@ -3,6 +3,7 @@
 
 MySqlite is a simple Android library that help you write a readable, yet type-safe code for Sqlite CRUD Operations (Create,Read,update,delete).
 
+
 ## Installation
 [![](https://jitpack.io/v/shittu33/MySQlite.svg)](https://jitpack.io/#shittu33/MySQlite)
 
@@ -117,7 +118,7 @@ deleteWhen(ID isEqual 9 and COLUMN_AUTHOR Is "shittu")
 ```
 ## ADVANCE
 
-#### To go more crazy i had to play around with Kotlin Higher-order functions and inifx to create a database & Table in a tree like structure as below
+###### To go more crazy i had to play around with Kotlin Higher-order functions and inifx to create a database & Table in a tree like structure as below
 
 ```Kotlin
      database {
@@ -140,7 +141,7 @@ deleteWhen(ID isEqual 9 and COLUMN_AUTHOR Is "shittu")
     }
 ```
 
-#### To customize your own table you might have to extend from Table Class,and with extention enough extention funtion, may be you don't!
+###### To customize your own table you might have to extend from Table Class,and with extention enough extention funtion, may be you don't!
 
 ```Kotlin
 cass NoteTable(database: DatabaseCreator?) : Table(
@@ -200,7 +201,7 @@ cass NoteTable(database: DatabaseCreator?) : Table(
 }
 
 ```
-##### From your activity/Reposity you can do something like this
+###### From your activity/Reposity you can do something like this
 ```Kotlin
    val myDb = createDatabase { name = "example.db"; version = 1 }
    customNoteTable = NoteTable(databaseCreator)
@@ -216,7 +217,7 @@ cass NoteTable(database: DatabaseCreator?) : Table(
     //Insert Note
     customNoteTable!!.insert(note)
 ```
-#### To handle the your database versions implement the following methods
+###### To handle the your database versions implement the following methods
 ```Kotlin
 myDb.setDatabaseListener(object : DatabaseCreator.DatabaseListener {
             override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -241,28 +242,34 @@ myDb.setDatabaseListener(object : DatabaseCreator.DatabaseListener {
 The following Kotlin concepts add sugar to the tea, they are the magic wands
 of this big show!!!
 
-#### 1. Generic functions
-#### 2. lamda & Receivers
-#### 3. Type function
-#### 4. Extension function
-#### 5. Higher-Order Functions
-#### 6. Scoping
-#### 7. Infix notations
-#### 8. Inline && Refied type parameters
-#### 9. Named && Default Arguments
-#### 10.Type-Safe Builders
+##### 1. Generic functions
+##### 2. lamda & Receivers
+##### 3. Type function
+##### 4. Extension function
+##### 5. Higher-Order Functions
+##### 6. Scoping
+##### 7. Infix notations
+##### 8. Inline && Refied type parameters
+##### 9. Named && Default Arguments
+##### 10.Type-Safe Builders
 
 
 
 ## Who can use this?
 
-#### 1. Anybody who wish to create a quick and simple database without diving in to the details
-#### 2. If you are unfamiliar with the usage of the above kotlin concepts and willing to learn
-#### 3. If you lack the moltivation to learn Kotlin advance features for Android 
+###### 1. Anybody who wish to create a quick and simple database without diving in to the details
+###### 2. If you are unfamiliar with the usage of the above kotlin concepts and willing to learn
+###### 3. If you lack the moltivation to learn Kotlin advance features for Android 
 
 ## MySqlite Story
 
  5 year ago i created some helper methods in Java to ease my usage of sqlite database, i wrote so many line of boiler plate codes, now with the advent of Kotlin and it great features, i could easily create a flexible code and i think creating this will create a lot of moltivations for developers to learn about this cool features.
+
+## Moltivations
+
+#### Android Compose
+#### Firebase SDK
+
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
