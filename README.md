@@ -117,8 +117,7 @@ deleteWhen(ID isEqual 9 and COLUMN_AUTHOR Is "shittu")
 ```
 ## ADVANCE
 
-#### To go more crazy i had to play around with Kotlin Higher-order functions 
-#### and inifx to create a database & Table in a tree like structure as below
+#### To go more crazy i had to play around with Kotlin Higher-order functions and inifx to create a database & Table in a tree like structure as below
 
 ```Kotlin
      database {
@@ -134,15 +133,14 @@ deleteWhen(ID isEqual 9 and COLUMN_AUTHOR Is "shittu")
 //            Columns.customColumn("age INTEGER PRIMARY KEY AUTOINCREMENT")
 //            customColumn { "age".integer().primaryKey().autoIncrement()}
 //            primaryColumn<Int> { ID }
-                }
-            }
-//            table{...}
-//            table{...}
+           }
+        }
+//      table{...}
+//      table{...}
     }
 ```
 
-#### To customize your own table you might have to extend from Table Class
-#### ,and with extention enough extention funtion, may be you don't!
+#### To customize your own table you might have to extend from Table Class,and with extention enough extention funtion, may be you don't!
 
 ```Kotlin
 cass NoteTable(database: DatabaseCreator?) : Table(
