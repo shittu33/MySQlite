@@ -145,7 +145,7 @@ deleteWhen(ID isEqual 9 and COLUMN_AUTHOR Is "shittu")
 ###### To customize your own table you might have to extend from Table Class,and with enough extention funtions, may be you don't!
 
 ```Kotlin
-cass NoteTable(database: DatabaseCreator?) : Table(
+class NoteTable(database: DatabaseCreator?) : Table(
     database!!,
     NOTE_TABLE,
     Columns.primaryAutoIncrementColumn<Int>(ID),
