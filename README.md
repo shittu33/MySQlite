@@ -264,7 +264,7 @@ of this big show!!!
 
 ## MySqlite Story
 
- 5 year ago i created some helper methods in Java to ease my usage of sqlite database, i wrote so many line of boiler plate codes, now with the advent of Kotlin and it great features, i could easily create a flexible code and i think creating this will create a lot of moltivations for developers to learn about this cool features.
+ 4 year ago i created some helper methods in Java to ease my usage of sqlite database, i wrote so many line of boiler plate codes, now with the advent of Kotlin and it great features, i could easily create a flexible code and i think creating this will create a lot of moltivations for developers to learn about this cool features.
 
 ## Moltivations
 
